@@ -1,17 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createStore } from "redux";
+const add = document.querySelector("#add");
+const minus = document.querySelector("#minus");
+const number = document.querySelector("#number");
+number.innerText = 0;
+// store 상태 변경 함수
+// reducer에서 리턴되는 건 application의 데이터가 된다.
+const reducer = (value = 0, action) => {
+  // action의 역할은 상태값 변경을 어떻게 할 건지 명령하게 된다. action = handle
+  if (action.type === "add") {
+    return value + 1;
+  } else if (action.type === "minus") {
+    return value - 1;
+  } else {
+    return value;
+  }
+};
+const store = createStore(reducer);
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const onChange = () => {
+  number.innerText = store.getState();
+};
+const addAction = () => {
+  store.dispatch({ type: "add" });
+};
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const minusAction = () => {
+  store.dispatch({ type: "minus" });
+};
+
+// subscribe는 store 상태가 변경된 것을
+store.subscribe(onChange);
+add.addEventListener("click", addAction);
+minus.addEventListener("click", minusAction);
